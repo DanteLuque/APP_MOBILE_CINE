@@ -1,11 +1,15 @@
 package com.senati.app_cine_mobile.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +28,22 @@ public class PeliculaAdapter extends ArrayAdapter<Pelicula> {
         this.listPeliculas = listPeliculas;
     }
 
+    private void showModal(String message, int id){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context);
+        dialog.setTitle("Confirmacion del proceso");
+        dialog.setMessage(message);
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(context,"Proceso del id: "+String.valueOf(id),Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+            }
+        });
+        dialog.setNegativeButton("cancelar",null);
+        dialog.create().show();
+    }
+
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
@@ -34,6 +54,14 @@ public class PeliculaAdapter extends ArrayAdapter<Pelicula> {
         TextView tvItemTitulo = convertView.findViewById(R.id.tvItemTitulo);
         TextView tvItemClasificacion = convertView.findViewById(R.id.tvItemClasificacion);
         TextView tvItemDuracionMin = convertView.findViewById(R.id.tvItemDuracionMin);
+        Button btnItemVermas = convertView.findViewById(R.id.btnDescripcion);
+
+        btnItemVermas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showModal("Proceso", pelicula.getId());
+            }
+        });
 
         tvItemTitulo.setText(pelicula.getTitulo());
         tvItemClasificacion.setText(pelicula.getClasificacion());
