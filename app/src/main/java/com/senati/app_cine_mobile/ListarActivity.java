@@ -11,8 +11,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.senati.app_cine_mobile.adapters.PeliculaAdapter;
+import com.senati.app_cine_mobile.entities.Pelicula;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class ListarActivity extends AppCompatActivity {
 
@@ -22,7 +27,7 @@ public class ListarActivity extends AppCompatActivity {
 
     //Llamado a API
     RequestQueue requestQueue;
-    ListView listaPeliculas;
+    ListView lisViewPeliculas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +39,7 @@ public class ListarActivity extends AppCompatActivity {
     }
 
     private void loadUI(){
-        listaPeliculas = findViewById(R.id.listaPeliculas);
+        lisViewPeliculas = findViewById(R.id.listaPeliculas);
     }
 
     private void getAll(){
@@ -48,6 +53,7 @@ public class ListarActivity extends AppCompatActivity {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
+                       procesarDatos(response);
                        Log.d("Peliculas", response.toString());
                     }
                 },
@@ -60,5 +66,32 @@ public class ListarActivity extends AppCompatActivity {
         );
         //paso3: Envio de la solicitud por el canal de comunicacion
         requestQueue.add(jsonRequest);
+    }
+
+    /*
+    * Renderizar los datos de la api en el ListView utilizando adaptador personalizado
+    * */
+    private void procesarDatos(JSONArray response){
+        try {
+            Pelicula pelicula;
+            ArrayList<Pelicula> listaPeliculas = new ArrayList<>();
+
+            for (int i=0 ; i< response.length(); i++){
+                JSONObject jsonObject = response.getJSONObject(i);
+                pelicula = new Pelicula();
+                pelicula.setId(jsonObject.getInt("ID"));
+                pelicula.setTitulo(jsonObject.getString("TITULO"));
+                pelicula.setDuracionMin(jsonObject.getInt("DURACION_MIN"));
+                pelicula.setClasificacion(jsonObject.getString("CLASIFICACION"));
+                pelicula.setLanzamiento(jsonObject.getString("LANZAMIENTO"));
+
+                listaPeliculas.add(pelicula);
+            }
+
+            PeliculaAdapter adapter = new PeliculaAdapter(this,listaPeliculas);
+            lisViewPeliculas.setAdapter(adapter);
+        }catch (Exception e){
+            Log.e("Error JSONArray", e.toString());
+        }
     }
 }

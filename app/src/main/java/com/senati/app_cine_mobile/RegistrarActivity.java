@@ -43,10 +43,10 @@ public class RegistrarActivity extends AppCompatActivity {
 
         JSONObject data = new JSONObject();
         try{
-            data.put("titulo", "Karate Kid"); //el segundo param es el campo de formulario (por ahora no hay)
-            data.put("duracionMin",130);
-            data.put("clasificacion","+14");
-            data.put("lanzamiento","2013");
+            data.put("titulo", "La Rosa de Guadalupe - La pelicula"); //el segundo param es el campo de formulario (por ahora no hay)
+            data.put("duracionMin",180);
+            data.put("clasificacion","APT");
+            data.put("lanzamiento","2025");
         }catch (Exception e){
             Log.e("Error JSON", e.toString());
         }
